@@ -1,0 +1,63 @@
+#include <LiquidCrystal.h>
+LiquidCrystal lcd(13, 12, 11, 10, 9, 8);
+float sensorvalue;
+#define lpg_sensor A0
+#define valve 4
+#define buzzer 5
+#define fan 7
+void setup()
+{
+ pinMode(lpg_sensor, INPUT);
+ pinMode(valve, OUTPUT);
+ pinMode(buzzer, OUTPUT);
+ pinMode(fan, OUTPUT);
+ lcd.begin(16, 2);
+ Serial.begin(9600);
+ lcd.print("LPG Gas Detector");
+ Serial.print("LPG Gas Detector");
+ lcd.setCursor(0,1);
+ lcd.print("EEE 04");
+ Serial.print("EEE 04");
+ delay(2000);
+}
+void loop()
+{sensorvalue = analogRead(lpg_sensor);
+ Serial.print("sensorvalue = ");
+ Serial.print(sensorvalue);
+ lcd.print(sensorvalue);
+if(analogRead(lpg_sensor)>300)
+ {
+ digitalWrite(buzzer, HIGH);
+ digitalWrite(valve, LOW);
+ digitalWrite(fan, HIGH);
+ lcd.clear();
+ lcd.print("LPG Gas Leakage");
+ Serial.print("LPG Gas Leakage");
+ lcd.setCursor(0, 1);
+ lcd.print(" Alert ");
+ Serial.print(" Alert ");
+ delay(43200000);
+ digitalWrite(buzzer, LOW);
+ //delay(5000);
+ delay(43200000);
+ digitalWrite(valve, HIGH);
+ delay(43200000);
+ digitalWrite(fan, HIGH);
+ delay(43200000);
+ }
+
+ else
+ {
+
+ digitalWrite(buzzer, LOW);
+ digitalWrite(valve, HIGH);
+ digitalWrite(fan, LOW);
+ lcd.clear();
+ lcd.print(" No LPG Gas ");
+ Serial.print(" No LPG Gas ");
+ lcd.setCursor(0,1);
+ lcd.print(" Leakage ");
+ Serial.print(" Leakage ");
+ delay(1000);
+ }
+}
